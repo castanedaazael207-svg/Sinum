@@ -2,7 +2,8 @@ name: Sinum Builder
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
@@ -10,21 +11,18 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      
-uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
 
-      
-name: Build iOS dylib
-      run: |
-        cd ./iOS
-        mkdir -p build
-        xcrun -sdk iphoneos clang++ Main.m -dynamiclib -arch arm64 -o build/libSinum.dylib -framework Foundation -framework UIKit
+      - name: Build iOS dylib
+        shell: bash
+        run: |
+          cd iOS
+          mkdir -p build
+          xcrun -sdk iphoneos clang++ Main.m -dynamiclib -arch arm64 -o build/libSinum.dylib -framework Foundation -framework UIKit
 
-      
-name: Upload dylib
-      uses: actions/upload-artifact@v4
-      with:
-        name: libSinum
-        path: iOS/build/libSinum.dylib
-
-  path: iOS/build/libSinum.dylib
+      - name: Upload dylib
+        uses: actions/upload-artifact@v4
+        with:
+          name: libSinum
+          path: iOS/build/libSinum.dylib
